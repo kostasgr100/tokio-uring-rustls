@@ -1,8 +1,10 @@
-use std::io;
-use std::sync::Arc;
+use crate::stream::TlsStream;
 
-use rustls::{ClientConfig, ClientConnection, ServerName};
-use tokio_rustls::{TlsConnector, TlsStream};
+use rustls::{ClientConfig, ClientConnection};
+use std::{
+    io::{self, Error, ErrorKind},
+    sync::Arc,
+};
 use tokio_uring::net::TcpStream;
 
 #[derive(Clone)]
@@ -22,8 +24,11 @@ impl TlsConnector {
         &self,
         domain: rustls::ServerName,
         socket: TcpStream,
-    ) -> io::Result<TlsStream<TcpStream, ClientConnection>> { 
-        let connector = TlsConnector::from(self.inner.clone());
-        connector.connect(domain, socket).await
+    ) -> io::Result<TlsStream<ClientConnection>> { 
+        let connector = rustls::ClientConnection::new(self.inner.clone(), domain)
+            .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+        let mut stream = TlsStream::new(socket, connector);
+        stream.handshake().await?;
+        Ok(stream)
     }
 }
