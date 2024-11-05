@@ -12,12 +12,12 @@ name = "tokio_uring_rustls"
 path = "src/lib.rs"
 
 [dependencies]
-rustls = { version = "0.21.1" }
-tokio-uring = { version = "0.4.0", features = ["bytes"] }
+rustls = { version = "0.23" }
+tokio-uring = { version = "0.5.0", features = ["bytes"] }
 bytes = { version = "1" }
 
 [dev-dependencies]
-rustls = { version = "0.21.1", features = ["dangerous_configuration"] }
-rustls-pemfile = "1.0.2"
+rustls = { version = "0.23", features = ["dangerous_configuration"] }
+rustls-pemfile = "2"
 tokio = { version = "1", features = ["full"] }
-clap = { version = "4" }
+clap = "4.5.20"
