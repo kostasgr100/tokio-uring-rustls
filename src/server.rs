@@ -21,11 +21,9 @@ impl From<Arc<ServerConfig>> for TlsAcceptor {
 
 impl TlsAcceptor {
     pub async fn accept(&self, socket: TcpStream) -> io::Result<TlsStream<ServerConnection>> {
-        let session = match ServerConnection::new(self.inner.clone()) {
-            Ok(s) => s,
-            Err(e) => return Err(Error::new(ErrorKind::Other, e)),
-        };
-        let mut stream = TlsStream::new(socket, session);
+        let acceptor = rustls::ServerConnection::new(self.inner.clone())
+            .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+        let mut stream = TlsStream::new(socket, acceptor); 
         stream.handshake().await?;
         Ok(stream)
     }
