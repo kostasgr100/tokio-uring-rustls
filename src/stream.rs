@@ -5,7 +5,7 @@ use std::{
     io::{self, Read, Write},
     ops::{Deref, DerefMut},
 };
-use tokio_uring::{net::TcpStream, BufResult};
+use tokio_uring::{buf::IoBuf, net::TcpStream, BufResult};
 
 pub struct TlsStream<C> {
     pub(crate) io: TcpStream,
@@ -122,7 +122,7 @@ where
         Ok((rdlen, wrlen))
     }
 
-    pub async fn read<B: tokio_uring::buf::IoBufMut>(&mut self, mut buf: B) -> BufResult<usize, B> {
+    pub async fn read<B: tokio_uring::buf::IoBufMut>(&mut self, mut buf: B) -> BufResult<usize, B> { 
         // Safety: bytes_total property promises the capacity of the buffer, such that we won't overrun.
         let slice =
             unsafe { std::slice::from_raw_parts_mut(buf.stable_mut_ptr(), buf.bytes_total()) };
