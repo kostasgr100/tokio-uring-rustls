@@ -1,6 +1,6 @@
 use crate::stream::TlsStream;
 
-use rustls::{ClientConfig, ClientConnection};
+use rustls::{pki_types::ServerName, ClientConfig, ClientConnection};
 use std::{
     io::{self, Error, ErrorKind},
     sync::Arc,
@@ -22,7 +22,7 @@ impl From<Arc<ClientConfig>> for TlsConnector {
 impl TlsConnector {
     pub async fn connect(
         &self,
-        domain: rustls::ServerName,
+        domain: ServerName,
         socket: TcpStream,
     ) -> io::Result<TlsStream<ClientConnection>> {
         let session = match ClientConnection::new(self.inner.clone(), domain) {
