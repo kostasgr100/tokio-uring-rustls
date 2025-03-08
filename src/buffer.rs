@@ -231,7 +231,7 @@ impl SyncWriteAdaptor {
         let buffer = self.buffer.take().expect("bug: buffer ownership expected");
 
         // Call write operation on io to flush the data in the buffer
-        let (result, buffer) = io.write(buffer).await;
+        let (result, buffer) = io.write(buffer).submit().await;
 
         // Regardless of the result of the write operation, we always need to return the buffer to the owner
         // such that the next write operation is able to use it.
