@@ -20,9 +20,9 @@ impl From<Arc<ClientConfig>> for TlsConnector {
 }
 
 impl TlsConnector {
-    pub async fn connect(
+    pub async fn connect<'a>(
         &self,
-        domain: ServerName<'_>,
+        domain: ServerName<'a>,
         socket: TcpStream,
     ) -> io::Result<TlsStream<ClientConnection>> {
         let session = match ClientConnection::new(self.inner.clone(), domain) {
