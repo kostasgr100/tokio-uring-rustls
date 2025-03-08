@@ -13,7 +13,7 @@ path = "src/lib.rs"
 
 [dependencies]
 rustls = "0.23.23"
-tokio-uring = { git = "https://github.com/kostasgr100/tokio-uring.git", branch = "main", features = ["bytes"] }
+tokio-uring = { git = "https://github.com/kostasgr100/tokio-uring.git", branch = "master", features = ["bytes"] }
 bytes = { version = "1" }
 
 [dev-dependencies]
