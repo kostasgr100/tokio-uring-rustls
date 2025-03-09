@@ -1,6 +1,6 @@
 use crate::buffer::{SyncReadAdaptor, SyncWriteAdaptor};
 
-use rustls::{ClientConfig, ClientConnection, ConnectionCommon, SideData, ServerName};
+use rustls::{ClientConfig, ClientConnection, ConnectionCommon, SideData, pki_types::ServerName};
 use std::{
     io::{self, Read, Write},
     ops::{Deref, DerefMut},
