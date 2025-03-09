@@ -25,7 +25,7 @@ impl TlsConnector {
         domain: ServerName<'static>,
         socket: TcpStream,
     ) -> io::Result<TlsStream<ClientConnection>> {
-        let mut stream = TlsStream::new_client(socket, self.inner.clone(), domain)?;
+        let mut stream = TlsStream::<ClientConnection>::new_client(socket, self.inner.clone(), domain)?;
         stream.handshake().await?;
         Ok(stream)
     }
