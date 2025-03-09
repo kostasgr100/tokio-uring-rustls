@@ -44,14 +44,16 @@ where
     }
 }
 
-pub fn split<C: DerefMut + Deref<Target = ConnectionCommon<SD>>, SD: SideData + 'static>(
-    stream: TlsStream<C>,
-) -> (ReadHalf<C>, WriteHalf<C>) {
-    let shared = Rc::new(UnsafeCell::new(stream));
+pub fn split<C, SD>(stream: TlsStream<C>) -> (OwnedReadHalf<C>, OwnedWriteHalf<C>)
+where
+    C: DerefMut + Deref<Target = ConnectionCommon<SD>>,
+    SD: SideData,
+{
+    let rc = Rc::new(UnsafeCell::new(stream));
     (
-        ReadHalf {
-            inner: shared.clone(),
+        OwnedReadHalf {
+            inner: rc.clone(),
         },
-        WriteHalf { inner: shared },
+        OwnedWriteHalf { inner: rc },
     )
 }
