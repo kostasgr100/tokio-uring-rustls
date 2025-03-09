@@ -8,15 +8,18 @@ use std::{
 };
 use tokio_uring::{net::TcpStream, buf::{IoBuf, IoBufMut}, BufResult};
 
-pub struct TlsStream {
+pub struct TlsStream<C> {
     pub(crate) io: TcpStream,
-    pub(crate) session: ClientConnection,
+    pub(crate) session: C,
     pub(crate) rbuffer: SyncReadAdaptor,
     pub(crate) wbuffer: SyncWriteAdaptor,
 }
 
-impl TlsStream {
-    pub fn new(io: TcpStream, session: ClientConnection) -> Self {
+impl<C, SD: SideData> TlsStream<C>
+where
+    C: DerefMut + Deref<Target = ConnectionCommon<SD>>,
+{
+    pub fn new(io: TcpStream, session: C) -> Self {
         TlsStream {
             io,
             session,
@@ -29,7 +32,7 @@ impl TlsStream {
         io: TcpStream,
         config: Arc<ClientConfig>,
         domain: ServerName<'static>,
-    ) -> io::Result<Self> {
+    ) -> io::Result<TlsStream<ClientConnection>> {
         let session = ClientConnection::new(config, domain)
             .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
         Ok(TlsStream {
