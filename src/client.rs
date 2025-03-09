@@ -1,6 +1,6 @@
 use crate::stream::TlsStream;
 
-use rustls::{pki_types::ServerName, ClientConfig};
+use rustls::{pki_types::ServerName, ClientConfig, ClientConnection};
 use std::{
     io::{self, Error, ErrorKind},
     sync::Arc,
@@ -24,7 +24,7 @@ impl TlsConnector {
         &self,
         domain: ServerName<'static>,
         socket: TcpStream,
-    ) -> io::Result<TlsStream> {
+    ) -> io::Result<TlsStream<ClientConnection>> {
         let mut stream = TlsStream::new_client(socket, self.inner.clone(), domain)?;
         stream.handshake().await?;
         Ok(stream)
