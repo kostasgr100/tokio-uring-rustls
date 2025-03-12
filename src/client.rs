@@ -5,7 +5,7 @@ use std::{
     io::{self, Error, ErrorKind},
     sync::Arc,
 };
-use tokio_uring::net::TcpStream;
+use tokio::net::TcpStream;
 
 #[derive(Clone)]
 pub struct TlsConnector {
