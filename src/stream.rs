@@ -7,7 +7,7 @@ use std::{
     sync::Arc,
 };
 use tokio_uring::{buf::{IoBuf, IoBufMut}, BufResult};
-tokio::net::TcpStream;
+use tokio::net::TcpStream;
 
 pub struct TlsStream<C> {
     pub(crate) io: TcpStream,
