@@ -12,12 +12,12 @@ name = "tokio_uring_rustls"
 path = "src/lib.rs"
 
 [dependencies]
-rustls = "0.23.37"
+rustls = { version = "0.23", default-features = false, features = ["aws_lc_rs"] }
 tokio-uring = { git = "https://github.com/kostasgr100/tokio-uring.git", branch = "hft", features = ["bytes"] }
 bytes = { version = "1" }
 
 [dev-dependencies]
-rustls = { version = "0.23.37", features = ["dangerous_configuration"] }
+rustls = { version = "0.23", default-features = false, features = ["aws_lc_rs", "dangerous_configuration"] }
 rustls-pemfile = "2.2.0"
 tokio = { version = "1", features = ["full"] }
 clap = "4.5.31"
