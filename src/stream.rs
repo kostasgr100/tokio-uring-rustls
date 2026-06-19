@@ -27,6 +27,14 @@ where
         }
     }
 
+    /// Waits for the underlying socket to become readable without requiring a buffer.
+    ///
+    /// This delegates to the cancellation-safe `readable()` POLL_ADD method 
+    /// on the underlying `tokio_uring::net::TcpStream`.
+    pub async fn readable(&self) -> io::Result<()> {
+        self.io.readable().await
+    }
+
     async fn read_io(&mut self) -> io::Result<usize> {
         let n = loop {
             match self.session.read_tls(&mut self.rbuffer) {
